@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,14 +30,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.offmind.smarthomebar.ui.theme.SmartHomeBarTheme
 import com.offmind.tutorial.presentation.BarIndicator
 import com.offmind.tutorial.presentation.SeparateBarView
 import com.offmind.tutorial.presentation.SolidBarView
+import kotlin.math.roundToInt
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,14 +61,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThreeBarsExample() {
-    var isEnabled by remember { mutableStateOf(false) }
+    var isEnabled by remember { mutableStateOf(true) }
     val animationDuration by remember { mutableStateOf(700) }
 
     val coolerValue by remember { mutableStateOf(20f) }
-    val brightnessValue by remember { mutableStateOf(0.6f) }
+
     val fanValue by remember { mutableStateOf(2) }
+    var sliderPosition by remember { mutableStateOf(50f) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -73,9 +83,9 @@ fun ThreeBarsExample() {
         ) {
             SolidBarView(
                 modifier = Modifier
-                    .width(60.dp)
-                    .height(180.dp),
-                currentValue = brightnessValue,
+                    .width(80.dp)
+                    .height(220.dp),
+                currentValue = sliderPosition/100f,
                 minValue = 0,
                 maxValue = 1,
                 isEnabled = isEnabled,
@@ -96,14 +106,15 @@ fun ThreeBarsExample() {
                     )
                 },
                 barLabelArrangement = Arrangement.Bottom,
-                barIndicator = null
+                barIndicator = null,
+                cornerRadius = 15.dp
             )
 
             SeparateBarView(
                 modifier = Modifier
-                    .width(60.dp)
-                    .height(180.dp),
-                currentValue = fanValue,
+                    .width(80.dp)
+                    .height(220.dp),
+                currentValue = (sliderPosition / 100f * 5).toInt(),
                 isEnabled = isEnabled,
                 maxValue = 5,
                 title = "FAN",
@@ -120,16 +131,16 @@ fun ThreeBarsExample() {
 
             SolidBarView(
                 modifier = Modifier
-                    .width(60.dp)
-                    .height(180.dp),
-                currentValue = coolerValue,
+                    .width(80.dp)
+                    .height(220.dp),
+                currentValue = sliderPosition / 100f * 25 + 5,
                 isEnabled = isEnabled,
                 minValue = 5,
                 maxValue = 30,
                 title = "AC",
                 barLabel = {
                     Text(
-                        text = "+${coolerValue}°",
+                        text = "+${String.format("%.1f",sliderPosition / 100f * 25 + 5)}°",
                         color = Color.White.copy(alpha = it),
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
@@ -149,11 +160,31 @@ fun ThreeBarsExample() {
             )
         }
 
-        Button(onClick = {
-            isEnabled = !isEnabled
-        }) {
-            Text(text = if (isEnabled) "Turn off" else "Turn on")
+        Column(Modifier.padding(horizontal = 20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = "${(sliderPosition).roundToInt() / 100f}", color = Color.White)
+            Slider(
+                modifier = Modifier.semantics { contentDescription = "Localized Description" },
+                value = sliderPosition,
+                onValueChange = { sliderPosition = it },
+                valueRange = 0f..100f,
+                steps = 100
+                )
         }
+
+        Row(modifier = Modifier.padding(horizontal = 20.dp)) {
+            Button(onClick = {
+                isEnabled = !isEnabled
+            }) {
+                Text(text = if (isEnabled) "Turn off" else "Turn on")
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            Button(onClick = {
+                sliderPosition = Random.nextFloat() * 100f
+            }) {
+                Text(text ="Animate value")
+            }
+        }
+
     }
 }
 
