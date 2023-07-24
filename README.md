@@ -15,4 +15,7 @@ The Smart Home Bars Indicators repository is a collection of elegantly designed 
 **Easy Integration:** With well-structured code and clear documentation, developers can effortlessly integrate these indicators into their smart home applications.  
 
 
-  
+https://github.com/AleksiejVolkov/ComposableBars/assets/106402816/ede668c5-d99d-4049-a06c-a6fcb1d6b4a7
+
+<img width="309" alt="Screenshot 2023-07-24 at 14 48 57" src="https://github.com/AleksiejVolkov/ComposableBars/assets/106402816/99bda263-50a9-4271-8ea9-b75a105118ab">
+<img width="312" alt="Screenshot 2023-07-24 at 14 49 06" src="https://github.com/AleksiejVolkov/ComposableBars/assets/106402816/89377f42-9532-4bad-ba6b-a5a8ac94624d">
