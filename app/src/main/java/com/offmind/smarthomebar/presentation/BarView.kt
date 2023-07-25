@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +48,7 @@ fun SeparateBarView(
     if (currentValue > maxValue) {
         throw Exception("Invalid current value parameter!!!")
     }
-    
+
     Column(modifier = modifier) {
         Box(
             modifier = Modifier
@@ -129,7 +128,7 @@ fun SolidBarView(
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            SolidBar(
+            SolidBarIndicator(
                 currentValue = animatedValue,
                 modifier = Modifier.fillMaxSize(),
                 activeColors = listOf(
@@ -205,7 +204,7 @@ fun BarIndicator(
         Spacer(modifier = Modifier.weight(1f))
         Image(
             modifier = Modifier
-                .size(10.dp)
+                .size(15.dp)
                 .rotate(animatedAngle),
             painter = painterResource(id = iconRes),
             contentDescription = null
@@ -223,7 +222,7 @@ fun BarIndicator(
 }
 
 @Composable
-private fun SolidBar(
+private fun SolidBarIndicator(
     modifier: Modifier,
     activeColors: List<Color>,
     backgroundColor: Color,
@@ -237,30 +236,29 @@ private fun SolidBar(
             .clip(shape = shape)
             .background(color = backgroundColor)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            if (currentValue < 1f) {
-                Spacer(modifier = Modifier.weight(1 - currentValue))
-            }
-            if (currentValue > 0f) {
-                Box(
-                    modifier = Modifier
-                        .weight(currentValue)
-                        .fillMaxWidth()
-                        .background(brush = Brush.horizontalGradient(activeColors))
-                )
-            }
-        }
         Column(
-            modifier = Modifier
-                .padding(vertical = 20.dp)
-                .fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = labelArrangement
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom
         ) {
-            label()
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight(currentValue)
+                    .fillMaxWidth()
+                    .background(brush = Brush.horizontalGradient(activeColors))
+            )
         }
     }
+    Column(
+        modifier = Modifier
+            .padding(vertical = 20.dp)
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = labelArrangement
+    ) {
+        label()
+    }
 }
+
 
 @Composable
 private fun SeparatedBar(
